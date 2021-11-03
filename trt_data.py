@@ -6,6 +6,12 @@ class TrtData:
         self.metadata = ""
 
     def read(self, path, line_skip=7):
+        """reads a .trt-file and stores data in python array in TrtData.data
+
+        Args:
+            path (string): Path to the .trt file that should be stored
+            line_skip (int): number of lines on top of file that should be skipped by the parser
+        """
         line_skip_count = line_skip
         row_index = 0
         with open(path) as file:
