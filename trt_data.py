@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import numpy as np
 
 class TrtData:
     def __init__(self):
@@ -27,16 +28,39 @@ class TrtData:
                     self.data[1].append(float(second))
                 else:
                     line_skip_count -= 1
+    def norm(self, maximum):
+        values = np.array(self.data[1])
+        self.data[1] = values/maximum
+
+    def zoom(self, minBorder, maxBorder):
+        minIndex = None
+        maxIndex = None
+        for (index, xval) in enumerate(self.data[0]):
+            if minIndex is not None and maxIndex is not None:
+                break
+            if minIndex is None and xval>minBorder:
+                minIndex = index
+            if maxIndex is None and xval>maxBorder:
+                maxIndex = index
+        print(maxIndex)
+        print(minIndex)
+        self.data[0] = self.data[0][minIndex:maxIndex]
+        self.data[1] = self.data[1][minIndex:maxIndex]
 
     def plot(self):
-        X = trt_data.data[0]
-        Y = trt_data.data[1]
+        X = self.data[0]
+        Y = self.data[1]
         plt.plot(X, Y)
+        plt.legend(["gemessene Intensität"])
+        plt.xlabel("Wellenlänge [nm]")
+        plt.ylabel("relative Zählrate")
         plt.show()
 
 if __name__ == '__main__':
     trt_data = TrtData()
     trt_data.read("example.trt")
+    trt_data.norm(maximum=8854)
+    trt_data.zoom(minBorder=510, maxBorder=550)
     trt_data.plot()
     #print(len(trt_data.data))
     #print(len(trt_data.data[0]))
